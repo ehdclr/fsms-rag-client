@@ -8,6 +8,13 @@ import { useChatStore } from '../../../shared/store/useChatStore';
 import type { ChatMessage } from '../../../shared/store/useChatStore';
 import ChatBubble from '../../../shared/ui/ChatBubble';
 
+const welcomeSuggestions = [
+  { text: '오늘 이벤트 가장 많은 장치는?', color: 'bg-red-500' },
+  { text: '배터리 부족한 장치 알려줘', color: 'bg-amber-500' },
+  { text: '오늘 데이터 안 온 장치', color: 'bg-blue-500' },
+  { text: '오늘 현황 요약해줘', color: 'bg-slate-400' },
+];
+
 const ChatPage: React.FC = () => {
   const { messages, sendMessage, isLoading } = useChatStore();
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
@@ -16,28 +23,50 @@ const ChatPage: React.FC = () => {
     endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSuggestionClick = (suggestionText: string) => {
-    sendMessage(suggestionText);
-  };
-
   return (
     <div className="flex flex-col h-screen overflow-hidden">
       <Header />
-      <main className="flex flex-1 overflow-hidden bg-slate-50 dark:bg-slate-900/50">
+      <div className="flex flex-1 overflow-hidden">
         <Sidebar />
         <ChatLayout>
           {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center max-w-2xl mx-auto text-center py-10">
-              <div className="w-20 h-20 bg-amber-50 rounded-3xl flex items-center justify-center mb-6 border border-amber-100 overflow-hidden dark:bg-amber-900/20 dark:border-amber-900/30">
-                <img src="/sensy.png" alt="Sensy" className="w-full h-full object-cover" />
+            <>
+              {/* Welcome message */}
+              <div className="flex gap-4">
+                <div className="w-9 h-9 rounded-full shrink-0 border border-primary/20 overflow-hidden">
+                  <img
+                    src="/sensy.png"
+                    alt="Sensy"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="space-y-4 max-w-2xl">
+                  <div className="glass p-5 rounded-2xl rounded-tl-none shadow-sm text-slate-700 dark:text-slate-200 leading-relaxed border border-slate-200/50 dark:border-slate-700/50">
+                    <p className="mb-3 font-medium text-slate-900 dark:text-white">
+                      안녕하세요! FSMS 센서 모니터링 챗봇입니다.
+                    </p>
+                    <p>
+                      실시간으로 수집되는 센서 상태, 이벤트, 알람 정보를 분석해
+                      드립니다. 궁금하신 내용을 질문해보세요.
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {welcomeSuggestions.map((item, idx) => (
+                      <button
+                        key={idx}
+                        className="flex items-center gap-1.5 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-primary rounded-full text-xs font-medium transition-all text-slate-600 dark:text-slate-300 shadow-sm"
+                        onClick={() => sendMessage(item.text)}
+                      >
+                        <span
+                          className={`w-1.5 h-1.5 ${item.color} rounded-full`}
+                        />
+                        {item.text}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <div className="bg-amber-50 border border-amber-100 p-6 rounded-2xl dark:bg-amber-900/10 dark:border-amber-900/20">
-                <p className="text-amber-800 font-medium leading-relaxed dark:text-amber-200">
-                  FSMS 센서 모니터링 챗봇입니다. <br />
-                  센서 상태, 이벤트, 알람 등을 질문해보세요.
-                </p>
-              </div>
-            </div>
+            </>
           ) : (
             <>
               {messages.map((msg: ChatMessage) => (
@@ -55,9 +84,9 @@ const ChatPage: React.FC = () => {
             </>
           )}
         </ChatLayout>
-        <SuggestionList onSuggestionClick={handleSuggestionClick} />
-      </main>
-      <div className="p-6 bg-white border-t border-slate-200 z-10 dark:bg-slate-900 dark:border-slate-800">
+        <SuggestionList onSuggestionClick={sendMessage} />
+      </div>
+      <div className="p-6 pt-2 z-10 bg-bg-light dark:bg-bg-dark">
         <ChatInput onSubmit={sendMessage} isLoading={isLoading} />
       </div>
     </div>

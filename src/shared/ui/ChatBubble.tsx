@@ -20,57 +20,56 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
 }) => {
   const isBot = role === 'bot';
 
-  return (
-    <div
-      className={`flex items-start gap-4 max-w-3xl mb-8 ${
-        isBot ? 'self-start' : 'self-end justify-end'
-      }`}
-    >
-      {isBot && (
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-primary overflow-hidden">
-          <img src="/sensy.png" alt="Sensy" className="w-full h-full object-cover" />
+  if (isBot) {
+    return (
+      <div className="flex gap-4">
+        <div className="w-9 h-9 rounded-full shrink-0 border border-primary/20 overflow-hidden">
+          <img
+            src="/sensy.png"
+            alt="Sensy"
+            className="w-full h-full object-cover"
+          />
         </div>
-      )}
-      <div className={`flex flex-col gap-2 ${!isBot ? 'items-end' : ''}`}>
-        <div
-          className={`p-4 rounded-2xl break-all ${
-            isBot
-              ? 'bg-white border border-slate-200 rounded-tl-none shadow-sm dark:bg-slate-800 dark:border-slate-700'
-              : 'bg-primary text-white rounded-tr-none shadow-md shadow-primary/20'
-          }`}
-        >
-          <p className="text-sm leading-relaxed whitespace-pre-wrap">
-            {content}
-            {isStreaming && (
-              <span className="inline-block w-1.5 h-3.5 bg-slate-400 ml-1 animate-blink" />
-            )}
-          </p>
-        </div>
-        {isBot && relatedQuestions && relatedQuestions.length > 0 && !isStreaming && (
-          <div className="flex flex-col gap-1.5 mt-1">
-            <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider ml-1">
-              관련 질문
-            </span>
-            {relatedQuestions.map((rq, idx) => (
-              <button
-                key={idx}
-                className="text-left text-xs px-3 py-2 rounded-xl bg-slate-50 border border-slate-100 text-slate-600 hover:border-primary/30 hover:text-primary transition-colors dark:bg-slate-800/40 dark:border-slate-700 dark:text-slate-400 dark:hover:text-primary"
-                onClick={() => onRelatedClick?.(rq.question)}
-              >
-                {rq.question}
-              </button>
-            ))}
+        <div className="space-y-4 max-w-2xl">
+          <div className="glass p-5 rounded-2xl rounded-tl-none shadow-sm text-slate-700 dark:text-slate-200 leading-relaxed border border-slate-200/50 dark:border-slate-700/50">
+            <p className="text-sm whitespace-pre-wrap">
+              {content}
+              {isStreaming && (
+                <span className="inline-block w-1.5 h-3.5 bg-slate-400 ml-1 animate-blink" />
+              )}
+            </p>
           </div>
-        )}
-        <span className={`text-[10px] text-slate-400 ${!isBot ? 'mr-1' : 'ml-1'}`}>
-          {time}
-        </span>
-      </div>
-      {!isBot && (
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-slate-200 text-slate-500 dark:bg-slate-700">
-          <span className="material-icons-round text-sm">person</span>
+          {relatedQuestions && relatedQuestions.length > 0 && !isStreaming && (
+            <div className="flex flex-wrap gap-2">
+              {relatedQuestions.map((rq, idx) => (
+                <button
+                  key={idx}
+                  className="flex items-center gap-1.5 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-primary rounded-full text-xs font-medium transition-all text-slate-600 dark:text-slate-300 shadow-sm"
+                  onClick={() => onRelatedClick?.(rq.question)}
+                >
+                  <span className="w-1.5 h-1.5 bg-primary rounded-full" />
+                  {rq.question}
+                </button>
+              ))}
+            </div>
+          )}
+          <span className="text-[10px] text-slate-400 ml-1">{time}</span>
         </div>
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-row-reverse gap-4">
+      <div className="w-9 h-9 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center text-slate-500 dark:text-slate-300 shrink-0 border border-slate-200 dark:border-slate-600">
+        <span className="material-icons-round">person</span>
+      </div>
+      <div className="space-y-2 flex flex-col items-end">
+        <div className="p-5 rounded-2xl rounded-tr-none shadow-sm text-slate-800 dark:text-slate-100 leading-relaxed border border-primary/15 dark:border-slate-700/50 max-w-2xl bg-primary-light dark:bg-slate-800/50">
+          <p className="text-sm whitespace-pre-wrap">{content}</p>
+        </div>
+        <span className="text-[10px] text-slate-400 mr-1">{time}</span>
+      </div>
     </div>
   );
 };

@@ -6,11 +6,15 @@ interface ChatLayoutProps {
 
 const ChatLayout: React.FC<ChatLayoutProps> = ({ children }) => {
   return (
-    <section className="flex-1 flex flex-col">
-      <div className="flex-1 overflow-y-auto p-6 lg:p-10 flex flex-col gap-8 chat-scroll">
+    <main className="flex-1 flex flex-col relative overflow-hidden">
+      {/* Decorative blur circles */}
+      <div className="absolute top-[-100px] right-[-100px] w-80 h-80 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[-100px] left-[-100px] w-80 h-80 bg-blue-400/10 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-8 z-10 max-w-5xl mx-auto w-full">
         {children}
       </div>
-    </section>
+    </main>
   );
 };
 
