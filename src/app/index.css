@@ -2,6 +2,8 @@
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons+Round");
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: #3b82f6;
   --color-primary-light: #eff6ff;
